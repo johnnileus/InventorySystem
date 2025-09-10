@@ -1,0 +1,24 @@
+﻿===Core features===
+Basic stats: weight
+Multiple Containers
+Stackable items
+Equippable Items
+Hotbar
+Hover transfer (rust style)
+
+default item icon based on item type
+no duplicate names when creating new items
+tooltip
+
+
+===Extra features===
+Unique or randomly generated names
+Shop/crafting
+Sound design
+Multiple example themes
+Language Localisation
+
+
+competition!
+https://assetstore.unity.com/packages/tools/game-toolkits/ultimate-inventory-system-166053#description
+
