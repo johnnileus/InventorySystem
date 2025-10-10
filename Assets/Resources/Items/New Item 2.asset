@@ -13,5 +13,21 @@ MonoBehaviour:
   m_Name: New Item 2
   m_EditorClassIdentifier: 
   name: New Item
-  id: 0
+  description: 0.2877322
+  stackable: 0
   icon: {fileID: 0}
+  worldPrefab: {fileID: 0}
+  attributes:
+  - rid: 8497728686943109125
+  references:
+    version: 2
+    RefIds:
+    - rid: 8497728686943109125
+      type: {class: ItemAttribute, ns: , asm: Assembly-CSharp}
+      data:
+        name: Damage
+        type: 1
+        intValue: 0
+        floatValue: 0
+        stringValue: 
+        boolValue: 0

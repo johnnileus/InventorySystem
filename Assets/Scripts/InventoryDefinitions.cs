@@ -3,38 +3,52 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum AttributeType{Integer, Float, String, Boolean}
+
 [Serializable]
-public abstract class ItemAttribute {
-    public string name;
+public class ItemAttribute{
+     public string name;
+    public AttributeType type;
+
+    public int intValue;
+    public float floatValue;
+    public string stringValue;
+    public bool boolValue;
+
+    public object GetValue(){
+        switch (type) {
+            case AttributeType.Integer:
+                return intValue;
+            case AttributeType.Float:
+                return floatValue;
+            case AttributeType.String:
+                return stringValue;
+            case AttributeType.Boolean:
+                return boolValue;
+            default:
+                return null;
+        }
+    }
     
-}
-
-[Serializable]
-public class IntAttribute : ItemAttribute{
-    public int value;
-
-    public IntAttribute(string n, int v){
-        name = n;
-        value = v;
+    public string GetValueAsString(){
+        switch (type) {
+            case AttributeType.Integer:
+                return intValue.ToString();
+            case AttributeType.Float:
+                return floatValue.ToString();
+            case AttributeType.String:
+                return stringValue;
+            case AttributeType.Boolean:
+                return boolValue.ToString();
+            default:
+                return null;
+        }
     }
-}
-
-[Serializable]
-public class FloatAttribute : ItemAttribute{
-    public float value;
-
-    public FloatAttribute(string n, float v){
+    
+    
+    
+    public ItemAttribute(string n, AttributeType t){
         name = n;
-        value = v;
-    }
-}
-
-[Serializable]
-public class StringAttribute : ItemAttribute{
-    public string value;
-
-    public StringAttribute(string n, string v){
-        name = n;
-        value = v;
+        type = t;
     }
 }

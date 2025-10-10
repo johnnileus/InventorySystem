@@ -12,8 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3cf15c2689f99e46888494762aefb93, type: 3}
   m_Name: bwah 2
   m_EditorClassIdentifier: 
-  name: bwah
+  name: New Item
   description: 
   stackable: 0
   icon: {fileID: 0}
   worldPrefab: {fileID: 0}
+  attributes:
+  - rid: 8497728686943109122
+  references:
+    version: 2
+    RefIds:
+    - rid: 8497728686943109122
+      type: {class: ItemAttribute, ns: , asm: Assembly-CSharp}
+      data:
+        name: Damage
+        type: 1
+        intValue: 0
+        floatValue: 0
+        stringValue: 
+        boolValue: 0
