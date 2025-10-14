@@ -1,14 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public enum AttributeType{Integer, Float, String, Boolean}
 
 [Serializable]
 public class ItemAttribute{
-     public string name;
-    public AttributeType type;
+    public string name;
+    public Type type;
 
     public int intValue;
     public float floatValue;
@@ -16,38 +17,21 @@ public class ItemAttribute{
     public bool boolValue;
 
     public object GetValue(){
-        switch (type) {
-            case AttributeType.Integer:
-                return intValue;
-            case AttributeType.Float:
-                return floatValue;
-            case AttributeType.String:
-                return stringValue;
-            case AttributeType.Boolean:
-                return boolValue;
-            default:
-                return null;
-        }
+        if (type == typeof(int)) return intValue; 
+        if (type == typeof(float)) return floatValue;
+        if (type == typeof(string)) return stringValue;
+        if (type == typeof(bool)) return boolValue;
+        return null;
+
     }
     
     public string GetValueAsString(){
-        switch (type) {
-            case AttributeType.Integer:
-                return intValue.ToString();
-            case AttributeType.Float:
-                return floatValue.ToString();
-            case AttributeType.String:
-                return stringValue;
-            case AttributeType.Boolean:
-                return boolValue.ToString();
-            default:
-                return null;
-        }
+        return GetValue().ToString();
     }
     
     
     
-    public ItemAttribute(string n, AttributeType t){
+    public ItemAttribute(string n, Type t){
         name = n;
         type = t;
     }

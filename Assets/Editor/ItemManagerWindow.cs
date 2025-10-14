@@ -6,7 +6,21 @@ using Codice.CM.Common.Update.Partial;
 using Unity.Plastic.Antlr3.Runtime.Debug;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using Random = UnityEngine.Random;
+
+
+public abstract class ItemCustomAttributeBase{ }
+public class ItemCustomAttribute<T> : ItemCustomAttributeBase{
+    public T value;
+    public AttributeType type;
+    
+
+
+    public ItemCustomAttribute(T v){
+        value = v;
+    }
+}
 
 public class ItemManagerWindow : EditorWindow{
 
@@ -22,6 +36,8 @@ public class ItemManagerWindow : EditorWindow{
         Tags
     }
 
+    private string[] categoryTypesString = Enum.GetNames(typeof(AttributeType));
+
     private MenuName currentMenu = MenuName.Main;
     private Vector2 itemListScrollPosition;
     
@@ -32,9 +48,11 @@ public class ItemManagerWindow : EditorWindow{
     
     //Item Inspector input fields
     private string itemName;
+    private string itemCategory;
     private string itemDescription;
     private bool itemStackable;
     private Sprite itemIcon;
+    private List<ItemCustomAttributeBase> itemAttributes = new List<ItemCustomAttributeBase>();
     
     
     [MenuItem("Window/ItemManager")]
@@ -66,13 +84,43 @@ public class ItemManagerWindow : EditorWindow{
 
         newItem.name = "New Item";
         newItem.description = Random.value.ToString();
-        ItemAttribute damage = new ItemAttribute("Damage", AttributeType.Float);
+        ItemAttribute damage = new ItemAttribute("Damage", typeof(float));
         newItem.attributes.Add(damage);
         Debug.Log(newItem.GetAttribute("Damage"));
 
         AssetDatabase.CreateAsset(newItem, AssetDatabase.GenerateUniqueAssetPath($"Assets/Resources/Items/New Item.asset"));
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
+    }
+    
+    private void RefreshData(){
+        itemAttributes.Clear();
+        foreach (var attribute in selectedItem.attributes) {
+            ItemCustomAttributeBase att = null;
+            switch (attribute.type.ToString()) {
+                case "int":
+                    att = new ItemCustomAttribute<int>(attribute.intValue);
+                    break;
+                case "float":
+                    att = new ItemCustomAttribute<float>(attribute.floatValue);
+                    break;
+                case "string":
+                    att = new ItemCustomAttribute<string>(attribute.stringValue);
+                    break;
+                case "bool":
+                    att = new ItemCustomAttribute<bool>(attribute.boolValue);
+                    break;
+            }
+            itemAttributes.Add(att);
+        }
+    }
+    
+    private void CreateCategory(){
+        Debug.Log("a");
+    }
+
+    private void DeleteItem(){
+        AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(selectedItem));
     }
     
     #region MenuDraws
@@ -116,12 +164,12 @@ public class ItemManagerWindow : EditorWindow{
     private void DrawItemsMenu(){
         GenerateItemDatabase();
 
-        GUIStyle style = new GUIStyle();
-        
-        GUILayout.Label("Items");
+        GUILayout.Label("Items", EditorStyles.boldLabel);
+
         EditorGUILayout.BeginHorizontal();
         DrawItemList();
         DrawItemInspector();
+        GUILayout.FlexibleSpace();
         EditorGUILayout.EndHorizontal(); 
     }
 
@@ -151,11 +199,16 @@ public class ItemManagerWindow : EditorWindow{
                 Selection.activeObject = item;
                 EditorGUIUtility.PingObject(item);
                 selectedItem = item;
+                editing = false;
             }
         }
         EditorGUILayout.EndScrollView();
         if (GUILayout.Button("Create New Item")) { 
             CreateEmptyItem();
+        }
+
+        if (GUILayout.Button("Delete Selected Item")) {
+            DeleteItem();
         }
         EditorGUILayout.EndVertical();
 
@@ -192,14 +245,15 @@ public class ItemManagerWindow : EditorWindow{
             
             EditorGUILayout.BeginHorizontal(statLine);
             GUILayout.Label("Category", leftCol);
-            GUILayout.Label("TODO", rightCol);
+            if (editing) itemCategory = GUILayout.TextField(itemCategory);
+            else GUILayout.Label(selectedItem.category, rightCol);
             EditorGUILayout.EndHorizontal();
             
             EditorGUILayout.BeginHorizontal(statLine);
             GUILayout.Label("Icon", leftCol, GUILayout.Height(32));
             if (editing) itemIcon = (Sprite) EditorGUILayout.ObjectField(itemIcon, typeof(Sprite), false);
-            else GUILayout.Box(selectedItem.icon.texture, GUILayout.Height(32), GUILayout.Width(32));
-
+            else if (selectedItem.icon) GUILayout.Box(selectedItem.icon.texture, GUILayout.Height(32), GUILayout.Width(32));
+            else GUILayout.Box(iconDatabase["empty"].texture, GUILayout.Height(32), GUILayout.Width(32));
             EditorGUILayout.EndHorizontal();
             
             EditorGUILayout.BeginHorizontal(statLine);
@@ -209,37 +263,54 @@ public class ItemManagerWindow : EditorWindow{
             
             EditorGUILayout.BeginHorizontal(statLine);
             GUILayout.Label("Description", leftCol);
-            
             if (editing) itemDescription = GUILayout.TextArea(itemDescription);
             else GUILayout.Label(selectedItem.description, rightCol);
             EditorGUILayout.EndHorizontal();
             
             EditorGUILayout.BeginHorizontal(statLine);
             GUILayout.Label("Stackable", leftCol);
-            
             if (editing) itemStackable = EditorGUILayout.Toggle(itemStackable);
             else GUILayout.Label(selectedItem.stackable.ToString(), rightCol);
             EditorGUILayout.EndHorizontal();
-        
+            
             
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label("Custom Attributes", EditorStyles.boldLabel, GUILayout.Width(120));
-            EditorGUILayout.EndHorizontal();
+            if (editing) if (GUILayout.Button("Add Attribute")) CreateCategory();
 
+
+            EditorGUILayout.EndHorizontal();
+                
             foreach (var att in selectedItem.attributes) {
                 EditorGUILayout.BeginHorizontal(statLine);
                 GUILayout.Label(att.name, leftCol);
-                GUILayout.Label(att.GetValueAsString(), rightCol);
+
+                if (editing) {
+                    
+
+                }
+                else {
+                    GUILayout.Label(att.GetValueAsString(), rightCol);
+                }
                 EditorGUILayout.EndHorizontal();
+
             }
             
             if (GUILayout.Button(editing ? "Save" : "Edit", GUILayout.Width(360))) {
 
                 if (editing) {
                     selectedItem.name = itemName;
+                    selectedItem.category = itemCategory;
                     selectedItem.description = itemDescription;
                     selectedItem.stackable = itemStackable;
                     selectedItem.icon = itemIcon;
+                }
+                else {
+                    itemName = selectedItem.name;
+                    itemCategory = selectedItem.category;
+                    itemDescription = selectedItem.description;
+                    itemStackable = selectedItem.stackable;
+                    itemIcon = selectedItem.icon;
                 }
                 
                 editing = !editing;

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ItemSO : ScriptableObject{
     public new string name;
+    public string category;
     public string description;
     public bool stackable;
 
