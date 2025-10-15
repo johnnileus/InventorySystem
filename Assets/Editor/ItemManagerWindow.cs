@@ -84,19 +84,24 @@ public class ItemManagerWindow : EditorWindow{
 
         newItem.name = "New Item";
         newItem.description = Random.value.ToString();
-        ItemAttribute damage = new ItemAttribute("Damage", typeof(float));
+        ItemAttribute damage = new ItemAttribute("Damage", typeof(int));
         newItem.attributes.Add(damage);
         Debug.Log(newItem.GetAttribute("Damage"));
+        Debug.Log(newItem.attributes[0].type);
 
         AssetDatabase.CreateAsset(newItem, AssetDatabase.GenerateUniqueAssetPath($"Assets/Resources/Items/New Item.asset"));
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
+        
     }
     
     private void RefreshData(){
         itemAttributes.Clear();
+
         foreach (var attribute in selectedItem.attributes) {
             ItemCustomAttributeBase att = null;
+            Debug.Log(selectedItem); //returns "New Item (ItemSO)"
+            Debug.Log(attribute.type); //returns "Null"
             switch (attribute.type.ToString()) {
                 case "int":
                     att = new ItemCustomAttribute<int>(attribute.intValue);
@@ -199,12 +204,15 @@ public class ItemManagerWindow : EditorWindow{
                 Selection.activeObject = item;
                 EditorGUIUtility.PingObject(item);
                 selectedItem = item;
+                RefreshData();
+
                 editing = false;
             }
         }
         EditorGUILayout.EndScrollView();
         if (GUILayout.Button("Create New Item")) { 
             CreateEmptyItem();
+            
         }
 
         if (GUILayout.Button("Delete Selected Item")) {
@@ -287,10 +295,9 @@ public class ItemManagerWindow : EditorWindow{
 
                 if (editing) {
                     
-
                 }
                 else {
-                    GUILayout.Label(att.GetValueAsString(), rightCol);
+                    
                 }
                 EditorGUILayout.EndHorizontal();
 

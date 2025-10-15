@@ -7,6 +7,9 @@ using UnityEngine;
 public enum AttributeType{Integer, Float, String, Boolean}
 
 [Serializable]
+
+public class ItemAttributeBase{}
+
 public class ItemAttribute{
     public string name;
     public Type type;

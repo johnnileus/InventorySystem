@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c3cf15c2689f99e46888494762aefb93, type: 3}
-  m_Name: New Item
+  m_Name: New Item 1
   m_EditorClassIdentifier: 
   name: New Item
   category: 
-  description: 0.01642084
+  description: 0.3175326
   stackable: 0
   icon: {fileID: 0}
   worldPrefab: {fileID: 0}
   attributes:
-  - rid: 8497728798010114055
+  - rid: 8497728798010114056
   references:
     version: 2
     RefIds:
-    - rid: 8497728798010114055
+    - rid: 8497728798010114056
       type: {class: ItemAttribute, ns: , asm: Assembly-CSharp}
       data:
         name: Damage
