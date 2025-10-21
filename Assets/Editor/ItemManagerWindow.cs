@@ -10,17 +10,7 @@ using UnityEngine.PlayerLoop;
 using Random = UnityEngine.Random;
 
 
-public abstract class ItemCustomAttributeBase{ }
-public class ItemCustomAttribute<T> : ItemCustomAttributeBase{
-    public T value;
-    public AttributeType type;
-    
 
-
-    public ItemCustomAttribute(T v){
-        value = v;
-    }
-}
 
 public class ItemManagerWindow : EditorWindow{
 
@@ -43,7 +33,7 @@ public class ItemManagerWindow : EditorWindow{
     private List<ItemSO> itemDatabase = new List<ItemSO>();
     private Dictionary<string, Sprite> iconDatabase = new Dictionary<string, Sprite>();
     private bool editing = false;
-    private ItemSO selectedItem;
+    private ItemSO selectedItem = null;
     
     //Item Inspector input fields
     private string itemName;
@@ -51,7 +41,8 @@ public class ItemManagerWindow : EditorWindow{
     private string itemDescription;
     private bool itemStackable;
     private Sprite itemIcon;
-    private List<ItemCustomAttributeBase> itemAttributes = new List<ItemCustomAttributeBase>();
+    private List<ItemAttributeBase> itemAttributes = new List<ItemAttributeBase>(); //cloned attributes of currently selected item
+
     
     
     [MenuItem("Window/ItemManager")]
@@ -94,31 +85,31 @@ public class ItemManagerWindow : EditorWindow{
     
     private void RefreshData(){
         itemAttributes.Clear();
- 
+        
+        
         
         foreach (var attribute in selectedItem.attributes) {
-            ItemCustomAttributeBase att = null;
-            
-            switch (attribute.GetValue()) {
-                case "int":
-                    att = new ItemCustomAttribute<int>((int) attribute.GetValue());
+            ItemAttributeBase att = null;
+            switch (attribute) {
+                case ItemAttributeInt:
+                    att = new ItemAttributeInt(attribute.name,(int) attribute.GetValue());
                     break;
-                case "float":
-                    att = new ItemCustomAttribute<float>((float)attribute.GetValue());
+                case ItemAttributeFloat:
+                    att = new ItemAttributeFloat(attribute.name,(float) attribute.GetValue());
                     break;
-                case "string":
-                    att = new ItemCustomAttribute<string>((string)attribute.GetValue());
+                case ItemAttributeString:
+                    att = new ItemAttributeString(attribute.name,(string) attribute.GetValue());
                     break;
-                case "bool":
-                    att = new ItemCustomAttribute<bool>((bool)attribute.GetValue());
+                case ItemAttributeBool:
+                    att = new ItemAttributeBool(attribute.name,(bool) attribute.GetValue());
                     break;
             }
             itemAttributes.Add(att);
         }
     }
     
-    private void CreateCategory(){
-        Debug.Log("a");
+    private void CreateAttribute(){
+        
     }
 
     private void DeleteItem(){
@@ -126,7 +117,7 @@ public class ItemManagerWindow : EditorWindow{
     }
     
     #region MenuDraws
-    
+     
     private void DrawNavigationBar(){
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Epic Item Manager", EditorStyles.boldLabel);
@@ -166,10 +157,10 @@ public class ItemManagerWindow : EditorWindow{
     private void DrawItemsMenu(){
         GenerateItemDatabase();
 
-        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.BeginHorizontal(GUILayout.Width(250));
         GUILayout.Label("Items", EditorStyles.boldLabel);
         if (GUILayout.Button("Reset")) {
-            GenerateItemDatabase();
+            //TODO
         }
         EditorGUILayout.EndHorizontal();
 
@@ -286,17 +277,33 @@ public class ItemManagerWindow : EditorWindow{
             
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label("Custom Attributes", EditorStyles.boldLabel, GUILayout.Width(120));
-            if (editing) if (GUILayout.Button("Add Attribute")) CreateCategory();
+            if (editing) if (GUILayout.Button("Add Attribute")) CreateAttribute();
 
 
             EditorGUILayout.EndHorizontal();
-            Debug.Log(selectedItem.attributes.Count);
-            foreach (var att in selectedItem.attributes) {
+            foreach (var att in itemAttributes) {
                 EditorGUILayout.BeginHorizontal(statLine);
                 GUILayout.Label(att.name, leftCol);
 
                 if (editing) {
-                    
+                    switch (att) {
+                        case ItemAttributeInt:
+                            int intval = EditorGUILayout.IntField((int)att.GetValue());
+                            att.SetValue(intval);
+                            break;
+                        case ItemAttributeFloat:
+                            float floatval = EditorGUILayout.FloatField((float)att.GetValue());
+                            att.SetValue(floatval);
+                            break;
+                        case ItemAttributeString:
+                            string stringval = EditorGUILayout.TextField((string)att.GetValue());
+                            att.SetValue(stringval);
+                            break;
+                        case ItemAttributeBool:
+                            bool boolval = EditorGUILayout.Toggle((bool)att.GetValue());
+                            att.SetValue(boolval);
+                            break;
+                    }
                 }
                 else {
                     GUILayout.Label(att.GetValue().ToString());

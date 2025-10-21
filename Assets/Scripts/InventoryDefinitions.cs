@@ -10,6 +10,7 @@ public enum AttributeType{Integer, Float, String, Boolean}
 public abstract class ItemAttributeBase{
     public string name;
     public abstract object GetValue();
+    public abstract void SetValue(object newValue);
 }
 
 
@@ -19,6 +20,10 @@ public class ItemAttributeInt : ItemAttributeBase{
     public int value;
     
     public override object GetValue() {return value;}
+
+    public override void SetValue(object newValue){
+        value = (int) newValue;
+    }
     public string GetValueAsString(){return GetValue().ToString();}
     
     public ItemAttributeInt(string n, int v){
@@ -32,6 +37,9 @@ public class ItemAttributeFloat : ItemAttributeBase{
     public float value;
     
     public override object GetValue() {return value;}
+    public override void SetValue(object newValue){
+        value = (float) newValue;
+    }
     public string GetValueAsString(){return GetValue().ToString();}
     
     public ItemAttributeFloat(string n, float v){
@@ -45,6 +53,9 @@ public class ItemAttributeString : ItemAttributeBase{
     public string value;
     
     public override object GetValue() {return value;}
+    public override void SetValue(object newValue){
+        value = (string) newValue;
+    }
     public string GetValueAsString(){return GetValue().ToString();}
     
     public ItemAttributeString(string n, string v){
@@ -58,6 +69,9 @@ public class ItemAttributeBool : ItemAttributeBase{
     public bool value;
     
     public override object GetValue() {return value;}
+    public override void SetValue(object newValue){
+        value = (bool) newValue;
+    }
     public string GetValueAsString(){return GetValue().ToString();}
     
     public ItemAttributeBool(string n, bool v){
