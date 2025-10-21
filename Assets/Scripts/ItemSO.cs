@@ -13,9 +13,9 @@ public class ItemSO : ScriptableObject{
     public GameObject worldPrefab;
     
     [SerializeReference]
-    public List<ItemAttribute> attributes = new List<ItemAttribute>(); //list of custom attributes
+    public List<ItemAttributeBase> attributes = new List<ItemAttributeBase>(); //list of custom attributes
 
-    public ItemAttribute GetAttribute(string att){
+    public ItemAttributeBase GetAttribute(string att){
         return attributes.FirstOrDefault(attr => attr.name == att);
     }
 }

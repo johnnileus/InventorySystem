@@ -24,8 +24,7 @@ public class ItemCustomAttribute<T> : ItemCustomAttributeBase{
 
 public class ItemManagerWindow : EditorWindow{
 
-    private int itemSpriteSize = 1;
-    
+
     private enum MenuName{
         Main,
         Items,
@@ -84,10 +83,8 @@ public class ItemManagerWindow : EditorWindow{
 
         newItem.name = "New Item";
         newItem.description = Random.value.ToString();
-        ItemAttribute damage = new ItemAttribute("Damage", typeof(int));
-        newItem.attributes.Add(damage);
-        Debug.Log(newItem.GetAttribute("Damage"));
-        Debug.Log(newItem.attributes[0].type);
+        newItem.attributes.Add(new ItemAttributeFloat("Damage", Random.value));
+        Debug.Log(newItem.GetAttribute("Damage").GetValue());
 
         AssetDatabase.CreateAsset(newItem, AssetDatabase.GenerateUniqueAssetPath($"Assets/Resources/Items/New Item.asset"));
         AssetDatabase.SaveAssets();
@@ -97,23 +94,23 @@ public class ItemManagerWindow : EditorWindow{
     
     private void RefreshData(){
         itemAttributes.Clear();
-
+ 
+        
         foreach (var attribute in selectedItem.attributes) {
             ItemCustomAttributeBase att = null;
-            Debug.Log(selectedItem); //returns "New Item (ItemSO)"
-            Debug.Log(attribute.type); //returns "Null"
-            switch (attribute.type.ToString()) {
+            
+            switch (attribute.GetValue()) {
                 case "int":
-                    att = new ItemCustomAttribute<int>(attribute.intValue);
+                    att = new ItemCustomAttribute<int>((int) attribute.GetValue());
                     break;
                 case "float":
-                    att = new ItemCustomAttribute<float>(attribute.floatValue);
+                    att = new ItemCustomAttribute<float>((float)attribute.GetValue());
                     break;
                 case "string":
-                    att = new ItemCustomAttribute<string>(attribute.stringValue);
+                    att = new ItemCustomAttribute<string>((string)attribute.GetValue());
                     break;
                 case "bool":
-                    att = new ItemCustomAttribute<bool>(attribute.boolValue);
+                    att = new ItemCustomAttribute<bool>((bool)attribute.GetValue());
                     break;
             }
             itemAttributes.Add(att);
@@ -169,7 +166,12 @@ public class ItemManagerWindow : EditorWindow{
     private void DrawItemsMenu(){
         GenerateItemDatabase();
 
+        EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Items", EditorStyles.boldLabel);
+        if (GUILayout.Button("Reset")) {
+            GenerateItemDatabase();
+        }
+        EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         DrawItemList();
@@ -288,7 +290,7 @@ public class ItemManagerWindow : EditorWindow{
 
 
             EditorGUILayout.EndHorizontal();
-                
+            Debug.Log(selectedItem.attributes.Count);
             foreach (var att in selectedItem.attributes) {
                 EditorGUILayout.BeginHorizontal(statLine);
                 GUILayout.Label(att.name, leftCol);
@@ -297,7 +299,7 @@ public class ItemManagerWindow : EditorWindow{
                     
                 }
                 else {
-                    
+                    GUILayout.Label(att.GetValue().ToString());
                 }
                 EditorGUILayout.EndHorizontal();
 
@@ -331,7 +333,7 @@ public class ItemManagerWindow : EditorWindow{
         EditorGUILayout.EndVertical();
 
     }
-    
+     
     private void DrawCategoriesMenu(){
         if (GUILayout.Button("create category")) {
             CategorySO newCat = CreateInstance<CategorySO>();

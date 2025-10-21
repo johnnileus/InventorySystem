@@ -7,35 +7,80 @@ using UnityEngine;
 public enum AttributeType{Integer, Float, String, Boolean}
 
 [Serializable]
-
-public class ItemAttributeBase{}
-
-public class ItemAttribute{
+public abstract class ItemAttributeBase{
     public string name;
-    public Type type;
+    public abstract object GetValue();
+}
 
-    public int intValue;
-    public float floatValue;
-    public string stringValue;
-    public bool boolValue;
 
-    public object GetValue(){
-        if (type == typeof(int)) return intValue; 
-        if (type == typeof(float)) return floatValue;
-        if (type == typeof(string)) return stringValue;
-        if (type == typeof(bool)) return boolValue;
-        return null;
 
-    }
+[Serializable]
+public class ItemAttributeInt : ItemAttributeBase{
+    public int value;
     
-    public string GetValueAsString(){
-        return GetValue().ToString();
-    }
+    public override object GetValue() {return value;}
+    public string GetValueAsString(){return GetValue().ToString();}
     
-    
-    
-    public ItemAttribute(string n, Type t){
+    public ItemAttributeInt(string n, int v){
         name = n;
-        type = t;
+        value = v;
     }
 }
+
+[Serializable]
+public class ItemAttributeFloat : ItemAttributeBase{
+    public float value;
+    
+    public override object GetValue() {return value;}
+    public string GetValueAsString(){return GetValue().ToString();}
+    
+    public ItemAttributeFloat(string n, float v){
+        name = n;
+        value = v;
+    }
+}
+
+[Serializable]
+public class ItemAttributeString : ItemAttributeBase{
+    public string value;
+    
+    public override object GetValue() {return value;}
+    public string GetValueAsString(){return GetValue().ToString();}
+    
+    public ItemAttributeString(string n, string v){
+        name = n;
+        value = v;
+    }
+}
+
+[Serializable]
+public class ItemAttributeBool : ItemAttributeBase{
+    public bool value;
+    
+    public override object GetValue() {return value;}
+    public string GetValueAsString(){return GetValue().ToString();}
+    
+    public ItemAttributeBool(string n, bool v){
+        name = n;
+        value = v;
+    }
+}
+
+// [Serializable]
+// public class ItemAttribute<T> : ItemAttributeBase{
+//
+//     public T value;
+//     public override object GetValue(){
+//         return value;
+//
+//     }
+//     
+//     public string GetValueAsString(){
+//         return GetValue().ToString();
+//     }
+//     
+//     public ItemAttribute(string n, T v){
+//         name = n;
+//         value = v;
+//     }
+// }
