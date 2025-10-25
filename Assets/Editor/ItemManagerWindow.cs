@@ -123,7 +123,7 @@ public class ItemManagerWindow : EditorWindow{
                 attr = new UIAttributeString("New String Attribute", "");
                 break;
             case AttributeType.Boolean:
-                attr = new UIAttributeBool("New Int Attribute", false);
+                attr = new UIAttributeBool("New Bool Attribute", false);
                 break;
         }
 
@@ -307,9 +307,10 @@ public class ItemManagerWindow : EditorWindow{
             EditorGUILayout.EndHorizontal();
             foreach (var att in itemAttributes) {
                 EditorGUILayout.BeginHorizontal(statLine);
-                GUILayout.Label(att.name, leftCol);
 
                 if (editing) {
+                    att.name = EditorGUILayout.TextField(att.name, GUILayout.Width(120));
+
                     switch (att) {
                         case UIAttributeInt:
                             int intval = EditorGUILayout.IntField((int)att.GetValue());
@@ -335,6 +336,7 @@ public class ItemManagerWindow : EditorWindow{
                     
                 }
                 else {
+                    GUILayout.Label(att.name, leftCol);
                     GUILayout.Label(att.GetValue().ToString());
                 }
                 EditorGUILayout.EndHorizontal();
