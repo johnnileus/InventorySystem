@@ -30,8 +30,8 @@ public class ItemManagerWindow : EditorWindow{
     private MenuName currentMenu = MenuName.Main;
     private Vector2 itemListScrollPosition;
     
-    private List<ItemSO> itemDatabase = new List<ItemSO>();
-    private Dictionary<string, Sprite> iconDatabase = new Dictionary<string, Sprite>();
+    private List<ItemSO> itemDatabase = new();
+    private Dictionary<string, Sprite> iconDatabase = new();
     private bool editing = false;
     private ItemSO selectedItem = null;
     
@@ -41,7 +41,9 @@ public class ItemManagerWindow : EditorWindow{
     private string itemDescription;
     private bool itemStackable;
     private Sprite itemIcon;
-    private List<ItemAttributeBase> itemAttributes = new List<ItemAttributeBase>(); //cloned attributes of currently selected item
+    
+    AttributeType newAtrType = AttributeType.None;
+    private List<UIAttributeBase> itemAttributes = new(); //cloned attributes of currently selected item
 
     
     
@@ -89,19 +91,19 @@ public class ItemManagerWindow : EditorWindow{
         
         
         foreach (var attribute in selectedItem.attributes) {
-            ItemAttributeBase att = null;
+            UIAttributeBase att = null;
             switch (attribute) {
                 case ItemAttributeInt:
-                    att = new ItemAttributeInt(attribute.name,(int) attribute.GetValue());
+                    att = new UIAttributeInt(attribute.name,(int) attribute.GetValue());
                     break;
                 case ItemAttributeFloat:
-                    att = new ItemAttributeFloat(attribute.name,(float) attribute.GetValue());
+                    att = new UIAttributeFloat(attribute.name,(float) attribute.GetValue());
                     break;
                 case ItemAttributeString:
-                    att = new ItemAttributeString(attribute.name,(string) attribute.GetValue());
+                    att = new UIAttributeString(attribute.name,(string) attribute.GetValue());
                     break;
                 case ItemAttributeBool:
-                    att = new ItemAttributeBool(attribute.name,(bool) attribute.GetValue());
+                    att = new UIAttributeBool(attribute.name,(bool) attribute.GetValue());
                     break;
             }
             itemAttributes.Add(att);
@@ -109,7 +111,25 @@ public class ItemManagerWindow : EditorWindow{
     }
     
     private void CreateAttribute(){
-        
+        UIAttributeBase attr = null;
+        switch (newAtrType) {
+            case AttributeType.Integer:
+                attr = new UIAttributeInt("New Int Attribute", 0);
+                break;
+            case AttributeType.Float:
+                attr = new UIAttributeFloat("New Float Attribute", 0.0f);
+                break;
+            case AttributeType.String:
+                attr = new UIAttributeString("New String Attribute", "");
+                break;
+            case AttributeType.Boolean:
+                attr = new UIAttributeBool("New Int Attribute", false);
+                break;
+        }
+
+        if (attr != null) {
+            itemAttributes.Add(attr);
+        }
     }
 
     private void DeleteItem(){
@@ -277,7 +297,11 @@ public class ItemManagerWindow : EditorWindow{
             
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label("Custom Attributes", EditorStyles.boldLabel, GUILayout.Width(120));
-            if (editing) if (GUILayout.Button("Add Attribute")) CreateAttribute();
+            if (editing) {
+                if (GUILayout.Button("Add Attribute")) CreateAttribute();
+
+                newAtrType = (AttributeType)EditorGUILayout.EnumPopup(newAtrType);
+            }
 
 
             EditorGUILayout.EndHorizontal();
@@ -287,23 +311,28 @@ public class ItemManagerWindow : EditorWindow{
 
                 if (editing) {
                     switch (att) {
-                        case ItemAttributeInt:
+                        case UIAttributeInt:
                             int intval = EditorGUILayout.IntField((int)att.GetValue());
                             att.SetValue(intval);
                             break;
-                        case ItemAttributeFloat:
+                        case UIAttributeFloat:
                             float floatval = EditorGUILayout.FloatField((float)att.GetValue());
                             att.SetValue(floatval);
                             break;
-                        case ItemAttributeString:
+                        case UIAttributeString:
                             string stringval = EditorGUILayout.TextField((string)att.GetValue());
                             att.SetValue(stringval);
                             break;
-                        case ItemAttributeBool:
+                        case UIAttributeBool:
                             bool boolval = EditorGUILayout.Toggle((bool)att.GetValue());
                             att.SetValue(boolval);
                             break;
                     }
+
+                    if (GUILayout.Button(att.toDelete ? "Restore" : "Delete")) {
+                        att.toDelete = !att.toDelete;
+                    }
+                    
                 }
                 else {
                     GUILayout.Label(att.GetValue().ToString());
@@ -314,19 +343,27 @@ public class ItemManagerWindow : EditorWindow{
             
             if (GUILayout.Button(editing ? "Save" : "Edit", GUILayout.Width(360))) {
 
-                if (editing) {
+                if (editing) { // clicked on Save
                     selectedItem.name = itemName;
                     selectedItem.category = itemCategory;
                     selectedItem.description = itemDescription;
                     selectedItem.stackable = itemStackable;
                     selectedItem.icon = itemIcon;
+                    
+                    selectedItem.attributes.Clear();
+                    foreach (var attr in itemAttributes) {
+                        selectedItem.CloneUIAttribute(attr);
+                    }
                 }
-                else {
+                else { // clicked on Edit
                     itemName = selectedItem.name;
                     itemCategory = selectedItem.category;
                     itemDescription = selectedItem.description;
                     itemStackable = selectedItem.stackable;
                     itemIcon = selectedItem.icon;
+                    for (int i = 0; i < selectedItem.attributes.Count; i++) {
+                        itemAttributes[i].SetValue(selectedItem.attributes[i].GetValue());
+                    }
                 }
                 
                 editing = !editing;

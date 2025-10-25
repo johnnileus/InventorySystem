@@ -18,4 +18,8 @@ public class ItemSO : ScriptableObject{
     public ItemAttributeBase GetAttribute(string att){
         return attributes.FirstOrDefault(attr => attr.name == att);
     }
+
+    public void CloneUIAttribute(UIAttributeBase attr){
+        attributes.Add(attr.GenerateItemAttribute());
+    }
 }

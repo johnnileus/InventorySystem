@@ -1,22 +1,23 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
-public enum AttributeType{None, Integer, Float, String, Boolean}
 
-[Serializable]
-public abstract class ItemAttributeBase{
+// used for storing temporary copies of an item's custom attributes to modify.
+public abstract class UIAttributeBase{
     public string name;
+    public bool toDelete = false;
+    
     public abstract object GetValue();
     public abstract void SetValue(object newValue);
+
+    public abstract ItemAttributeBase GenerateItemAttribute();
+
 }
 
 
-
-[Serializable]
-public class ItemAttributeInt : ItemAttributeBase{
+public class UIAttributeInt : UIAttributeBase{
     public int value;
     
     public override object GetValue() {return value;}
@@ -24,77 +25,76 @@ public class ItemAttributeInt : ItemAttributeBase{
     public override void SetValue(object newValue){
         value = (int) newValue;
     }
+
+    public override ItemAttributeBase GenerateItemAttribute(){
+        return new ItemAttributeInt(name, value);
+    }
+
     public string GetValueAsString(){return GetValue().ToString();}
     
-    public ItemAttributeInt(string n, int v){
+    public UIAttributeInt(string n, int v){
         name = n;
         value = v;
     }
 }
 
-[Serializable]
-public class ItemAttributeFloat : ItemAttributeBase{
+
+public class UIAttributeFloat : UIAttributeBase{
     public float value;
     
     public override object GetValue() {return value;}
     public override void SetValue(object newValue){
         value = (float) newValue;
     }
+    
+    public override ItemAttributeBase GenerateItemAttribute(){ 
+        return new ItemAttributeFloat(name, value);
+    }
     public string GetValueAsString(){return GetValue().ToString();}
     
-    public ItemAttributeFloat(string n, float v){
+    public UIAttributeFloat(string n, float v){
         name = n;
         value = v;
     }
 }
 
-[Serializable]
-public class ItemAttributeString : ItemAttributeBase{
+
+public class UIAttributeString : UIAttributeBase{
     public string value;
     
     public override object GetValue() {return value;}
     public override void SetValue(object newValue){
         value = (string) newValue;
     }
+    
+    public override ItemAttributeBase GenerateItemAttribute(){ 
+        return new ItemAttributeString(name, value);
+    }
     public string GetValueAsString(){return GetValue().ToString();}
     
-    public ItemAttributeString(string n, string v){
+    public UIAttributeString(string n, string v){
         name = n;
         value = v;
     }
 }
 
-[Serializable]
-public class ItemAttributeBool : ItemAttributeBase{
+
+public class UIAttributeBool : UIAttributeBase{
     public bool value;
     
     public override object GetValue() {return value;}
     public override void SetValue(object newValue){
         value = (bool) newValue;
     }
+    
+    public override ItemAttributeBase GenerateItemAttribute(){ 
+        return new ItemAttributeBool(name, value);
+    }
+    
     public string GetValueAsString(){return GetValue().ToString();}
     
-    public ItemAttributeBool(string n, bool v){
+    public UIAttributeBool(string n, bool v){
         name = n;
         value = v;
     }
 }
-
-// [Serializable]
-// public class ItemAttribute<T> : ItemAttributeBase{
-//
-//     public T value;
-//     public override object GetValue(){
-//         return value;
-//
-//     }
-//     
-//     public string GetValueAsString(){
-//         return GetValue().ToString();
-//     }
-//     
-//     public ItemAttribute(string n, T v){
-//         name = n;
-//         value = v;
-//     }
-// }
