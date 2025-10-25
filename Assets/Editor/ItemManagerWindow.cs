@@ -39,10 +39,11 @@ public class ItemManagerWindow : EditorWindow{
     private string itemName;
     private string itemCategory;
     private string itemDescription;
-    private bool itemStackable;
+    private int itemMaxStack;
     private Sprite itemIcon;
     
     AttributeType newAtrType = AttributeType.None;
+    [SerializeField]
     private List<UIAttributeBase> itemAttributes = new(); //cloned attributes of currently selected item
 
     
@@ -55,6 +56,7 @@ public class ItemManagerWindow : EditorWindow{
     private void OnEnable(){
         GenerateItemDatabase();
         GenerateIconDatabase();
+        RefreshData();  
     }
 
     private void OnGUI(){
@@ -87,6 +89,8 @@ public class ItemManagerWindow : EditorWindow{
     
     private void RefreshData(){
         itemAttributes.Clear();
+
+        if (!selectedItem) return;
         
         
         
@@ -289,9 +293,9 @@ public class ItemManagerWindow : EditorWindow{
             EditorGUILayout.EndHorizontal();
             
             EditorGUILayout.BeginHorizontal(statLine);
-            GUILayout.Label("Stackable", leftCol);
-            if (editing) itemStackable = EditorGUILayout.Toggle(itemStackable);
-            else GUILayout.Label(selectedItem.stackable.ToString(), rightCol);
+            GUILayout.Label("Maximum Stack", leftCol); 
+            if (editing) itemMaxStack = EditorGUILayout.IntField(itemMaxStack);
+            else GUILayout.Label(selectedItem.maxStack.ToString(), rightCol);
             EditorGUILayout.EndHorizontal();
             
             
@@ -349,7 +353,7 @@ public class ItemManagerWindow : EditorWindow{
                     selectedItem.name = itemName;
                     selectedItem.category = itemCategory;
                     selectedItem.description = itemDescription;
-                    selectedItem.stackable = itemStackable;
+                    selectedItem.maxStack = itemMaxStack;
                     selectedItem.icon = itemIcon;
                     
                     selectedItem.attributes.Clear();
@@ -361,7 +365,7 @@ public class ItemManagerWindow : EditorWindow{
                     itemName = selectedItem.name;
                     itemCategory = selectedItem.category;
                     itemDescription = selectedItem.description;
-                    itemStackable = selectedItem.stackable;
+                    itemMaxStack = selectedItem.maxStack;
                     itemIcon = selectedItem.icon;
                     for (int i = 0; i < selectedItem.attributes.Count; i++) {
                         itemAttributes[i].SetValue(selectedItem.attributes[i].GetValue());

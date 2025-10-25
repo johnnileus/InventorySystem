@@ -7,7 +7,7 @@ public class ItemSO : ScriptableObject{
     public new string name;
     public string category;
     public string description;
-    public bool stackable;
+    public int maxStack;
 
     public Sprite icon;
     public GameObject worldPrefab;

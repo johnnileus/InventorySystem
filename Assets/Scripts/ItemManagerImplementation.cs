@@ -5,6 +5,7 @@ using UnityEngine;
 
 
 // used for storing temporary copies of an item's custom attributes to modify.
+[Serializable]
 public abstract class UIAttributeBase{
     public string name;
     public bool toDelete = false;
@@ -16,6 +17,7 @@ public abstract class UIAttributeBase{
 
 }
 
+[Serializable]
 
 public class UIAttributeInt : UIAttributeBase{
     public int value;
@@ -38,6 +40,7 @@ public class UIAttributeInt : UIAttributeBase{
     }
 }
 
+[Serializable]
 
 public class UIAttributeFloat : UIAttributeBase{
     public float value;
@@ -58,6 +61,7 @@ public class UIAttributeFloat : UIAttributeBase{
     }
 }
 
+[Serializable]
 
 public class UIAttributeString : UIAttributeBase{
     public string value;
@@ -78,6 +82,7 @@ public class UIAttributeString : UIAttributeBase{
     }
 }
 
+[Serializable]
 
 public class UIAttributeBool : UIAttributeBase{
     public bool value;

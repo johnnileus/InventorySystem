@@ -14,17 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: New Item
   category: 
-  description: 0.1552422
-  stackable: 0
+  description: 0.2451977
+  maxStack: 0
   icon: {fileID: 0}
   worldPrefab: {fileID: 0}
   attributes:
-  - rid: 8497728941022511105
+  - rid: 8497729027958636606
   references:
     version: 2
     RefIds:
-    - rid: 8497728941022511105
+    - rid: 8497729027958636606
       type: {class: ItemAttributeFloat, ns: , asm: Assembly-CSharp}
       data:
         name: Damage
-        value: 1.1
+        value: 0.99927294
