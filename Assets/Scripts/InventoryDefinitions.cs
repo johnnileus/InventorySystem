@@ -7,7 +7,7 @@ using UnityEngine;
 public enum AttributeType{None, Integer, Float, String, Boolean}
 
 [Serializable]
-public abstract class ItemAttributeBase{
+public abstract class StatAttributeBase{
     public string name;
     public abstract object GetValue();
     public abstract void SetValue(object newValue);
@@ -16,7 +16,7 @@ public abstract class ItemAttributeBase{
 
 
 [Serializable]
-public class ItemAttributeInt : ItemAttributeBase{
+public class StatAttributeInt : StatAttributeBase{
     public int value;
     
     public override object GetValue() {return value;}
@@ -26,14 +26,14 @@ public class ItemAttributeInt : ItemAttributeBase{
     }
     public string GetValueAsString(){return GetValue().ToString();}
     
-    public ItemAttributeInt(string n, int v){
+    public StatAttributeInt(string n, int v){
         name = n;
         value = v;
     }
 }
 
 [Serializable]
-public class ItemAttributeFloat : ItemAttributeBase{
+public class StatAttributeFloat : StatAttributeBase{
     public float value;
     
     public override object GetValue() {return value;}
@@ -42,14 +42,14 @@ public class ItemAttributeFloat : ItemAttributeBase{
     }
     public string GetValueAsString(){return GetValue().ToString();}
     
-    public ItemAttributeFloat(string n, float v){
+    public StatAttributeFloat(string n, float v){
         name = n;
         value = v;
     }
 }
 
 [Serializable]
-public class ItemAttributeString : ItemAttributeBase{
+public class StatAttributeString : StatAttributeBase{
     public string value;
     
     public override object GetValue() {return value;}
@@ -58,14 +58,14 @@ public class ItemAttributeString : ItemAttributeBase{
     }
     public string GetValueAsString(){return GetValue().ToString();}
     
-    public ItemAttributeString(string n, string v){
+    public StatAttributeString(string n, string v){
         name = n;
         value = v;
     }
 }
 
 [Serializable]
-public class ItemAttributeBool : ItemAttributeBase{
+public class StatAttributeBool : StatAttributeBase{
     public bool value;
     
     public override object GetValue() {return value;}
@@ -74,7 +74,7 @@ public class ItemAttributeBool : ItemAttributeBase{
     }
     public string GetValueAsString(){return GetValue().ToString();}
     
-    public ItemAttributeBool(string n, bool v){
+    public StatAttributeBool(string n, bool v){
         name = n;
         value = v;
     }

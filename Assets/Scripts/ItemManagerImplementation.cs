@@ -13,7 +13,7 @@ public abstract class UIAttributeBase{
     public abstract object GetValue();
     public abstract void SetValue(object newValue);
 
-    public abstract ItemAttributeBase GenerateItemAttribute();
+    public abstract StatAttributeBase GenerateItemAttribute();
 
 }
 
@@ -28,8 +28,8 @@ public class UIAttributeInt : UIAttributeBase{
         value = (int) newValue;
     }
 
-    public override ItemAttributeBase GenerateItemAttribute(){
-        return new ItemAttributeInt(name, value);
+    public override StatAttributeBase GenerateItemAttribute(){
+        return new StatAttributeInt(name, value);
     }
 
     public string GetValueAsString(){return GetValue().ToString();}
@@ -50,8 +50,8 @@ public class UIAttributeFloat : UIAttributeBase{
         value = (float) newValue;
     }
     
-    public override ItemAttributeBase GenerateItemAttribute(){ 
-        return new ItemAttributeFloat(name, value);
+    public override StatAttributeBase GenerateItemAttribute(){ 
+        return new StatAttributeFloat(name, value);
     }
     public string GetValueAsString(){return GetValue().ToString();}
     
@@ -71,8 +71,8 @@ public class UIAttributeString : UIAttributeBase{
         value = (string) newValue;
     }
     
-    public override ItemAttributeBase GenerateItemAttribute(){ 
-        return new ItemAttributeString(name, value);
+    public override StatAttributeBase GenerateItemAttribute(){ 
+        return new StatAttributeString(name, value);
     }
     public string GetValueAsString(){return GetValue().ToString();}
     
@@ -92,8 +92,8 @@ public class UIAttributeBool : UIAttributeBase{
         value = (bool) newValue;
     }
     
-    public override ItemAttributeBase GenerateItemAttribute(){ 
-        return new ItemAttributeBool(name, value);
+    public override StatAttributeBase GenerateItemAttribute(){ 
+        return new StatAttributeBool(name, value);
     }
     
     public string GetValueAsString(){return GetValue().ToString();}

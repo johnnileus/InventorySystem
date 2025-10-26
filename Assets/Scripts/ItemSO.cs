@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ItemSO : ScriptableObject{
     public new string name;
-    public string category;
+    public CategorySO category;
     public string description;
     public int maxStack;
 
@@ -13,9 +13,9 @@ public class ItemSO : ScriptableObject{
     public GameObject worldPrefab;
     
     [SerializeReference]
-    public List<ItemAttributeBase> attributes = new List<ItemAttributeBase>(); //list of custom attributes
+    public List<StatAttributeBase> attributes = new List<StatAttributeBase>(); //list of custom attributes
 
-    public ItemAttributeBase GetAttribute(string att){
+    public StatAttributeBase GetAttribute(string att){
         return attributes.FirstOrDefault(attr => attr.name == att);
     }
 
