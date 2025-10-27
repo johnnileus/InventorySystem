@@ -32,6 +32,7 @@ public class ItemManagerWindow : EditorWindow{
     
     private List<ItemSO> itemDatabase = new();
     private List<CategorySO> catDatabase = new();
+    private List<string> catNames = new();
     private Dictionary<string, Sprite> iconDatabase = new();
     private bool editing = false;
     private ItemSO selectedItem = null;
@@ -39,7 +40,7 @@ public class ItemManagerWindow : EditorWindow{
     
     //Item Inspector input fields
     private string itemName;
-    private CategorySO itemCategory;
+    private int itemCatIndex;
     private string itemDescription;
     private int itemMaxStack;
     private Sprite itemIcon;
@@ -99,6 +100,10 @@ public class ItemManagerWindow : EditorWindow{
     private void GenerateCatDatabase(){
         catDatabase.Clear();
         catDatabase.AddRange(Resources.LoadAll<CategorySO>("Categories"));
+        catNames.Clear();
+        foreach (var cat in catDatabase) {
+            catNames.Add(cat.name);
+        }
     }
 
     private void GenerateIconDatabase(){
@@ -311,7 +316,7 @@ public class ItemManagerWindow : EditorWindow{
             
             EditorGUILayout.BeginHorizontal(statLine);
             GUILayout.Label("Category", leftCol);
-            if (editing) itemCategory = (CategorySO)EditorGUILayout.ObjectField(itemCategory, typeof(CategorySO), false);
+            if (editing) itemCatIndex = EditorGUILayout.Popup(itemCatIndex, catNames.ToArray());
             else GUILayout.Label(selectedItem.category == null ? "None" : selectedItem.category.name, rightCol);
             EditorGUILayout.EndHorizontal();
             
@@ -389,22 +394,29 @@ public class ItemManagerWindow : EditorWindow{
             }
             
             if (GUILayout.Button(editing ? "Save" : "Edit", GUILayout.Width(360))) {
-
                 if (editing) { // clicked on Save
                     selectedItem.name = itemName;
-                    selectedItem.category = itemCategory;
+                    selectedItem.category = catDatabase[itemCatIndex];
                     selectedItem.description = itemDescription;
                     selectedItem.maxStack = itemMaxStack;
                     selectedItem.icon = itemIcon;
                     
                     selectedItem.attributes.Clear();
+                    List<UIAttributeBase> tempList = new();
                     foreach (var attr in itemAttributes) {
-                        selectedItem.CloneUIAttribute(attr);
+                        if (!attr.toDelete) {
+                            selectedItem.CloneUIAttribute(attr);
+                            tempList.Add(attr);
+                        }
                     }
+                    itemAttributes = tempList;
                 }
                 else { // clicked on Edit
+
+                    GenerateCatDatabase();
+                    
                     itemName = selectedItem.name;
-                    itemCategory = selectedItem.category;
+                    itemCatIndex = catDatabase.IndexOf(selectedItem.category);
                     itemDescription = selectedItem.description;
                     itemMaxStack = selectedItem.maxStack;
                     itemIcon = selectedItem.icon;
@@ -497,23 +509,26 @@ public class ItemManagerWindow : EditorWindow{
             if (editing) itemName = GUILayout.TextField(itemName);
             else GUILayout.Label(selectedCat.name, rightCol);
             EditorGUILayout.EndHorizontal();
+            
+            
+            if (GUILayout.Button(editing ? "Save" : "Edit", GUILayout.Width(360))) {
+
+                if (editing) { // clicked on Save
+                
+                    selectedCat.name = itemName;
+
+
+                }
+                else { // clicked on Edit
+                    itemName = selectedCat.name;
+
+                }
+                
+                editing = !editing;
+            }
         }
         
-        if (GUILayout.Button(editing ? "Save" : "Edit", GUILayout.Width(360))) {
-
-            if (editing) { // clicked on Save
-                
-                selectedCat.name = itemName;
-
-
-            }
-            else { // clicked on Edit
-                itemName = selectedCat.name;
-
-            }
-                
-            editing = !editing;
-        }
+        
         EditorGUILayout.EndVertical();
     }
     
