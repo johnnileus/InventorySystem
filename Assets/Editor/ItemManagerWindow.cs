@@ -100,7 +100,9 @@ public class ItemManagerWindow : EditorWindow{
     private void GenerateCatDatabase(){
         catDatabase.Clear();
         catDatabase.AddRange(Resources.LoadAll<CategorySO>("Categories"));
+        
         catNames.Clear();
+        catNames.Add("None");
         foreach (var cat in catDatabase) {
             catNames.Add(cat.name);
         }
@@ -396,7 +398,7 @@ public class ItemManagerWindow : EditorWindow{
             if (GUILayout.Button(editing ? "Save" : "Edit", GUILayout.Width(360))) {
                 if (editing) { // clicked on Save
                     selectedItem.name = itemName;
-                    selectedItem.category = catDatabase[itemCatIndex];
+                    selectedItem.category = itemCatIndex < 1 ? null : catDatabase[itemCatIndex-1];
                     selectedItem.description = itemDescription;
                     selectedItem.maxStack = itemMaxStack;
                     selectedItem.icon = itemIcon;
@@ -416,7 +418,7 @@ public class ItemManagerWindow : EditorWindow{
                     GenerateCatDatabase();
                     
                     itemName = selectedItem.name;
-                    itemCatIndex = catDatabase.IndexOf(selectedItem.category);
+                    itemCatIndex = catDatabase.IndexOf(selectedItem.category)+1;
                     itemDescription = selectedItem.description;
                     itemMaxStack = selectedItem.maxStack;
                     itemIcon = selectedItem.icon;
