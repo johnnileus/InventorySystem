@@ -12,19 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3cf15c2689f99e46888494762aefb93, type: 3}
   m_Name: New Item
   m_EditorClassIdentifier: 
-  name: New Item
+  itemName: New Item
   category: {fileID: 0}
-  description: 0.7051023
+  description: 0.09259797
   maxStack: 0
   icon: {fileID: 0}
   worldPrefab: {fileID: 0}
   attributes:
-  - rid: 8497729054897602577
+  - rid: 8497729164302090241
   references:
     version: 2
     RefIds:
-    - rid: 8497729054897602577
+    - rid: 8497729164302090241
       type: {class: StatAttributeFloat, ns: , asm: Assembly-CSharp}
       data:
         name: Damage
-        value: 0.41483885
+        value: 0.99369085

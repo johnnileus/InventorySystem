@@ -116,7 +116,7 @@ public class ItemManagerWindow : EditorWindow{
     private void CreateEmptyItem(){
         ItemSO newItem = CreateInstance<ItemSO>();
 
-        newItem.name = "New Item";
+        newItem.itemName = "New Item";
         newItem.description = Random.value.ToString();
         newItem.attributes.Add(new StatAttributeFloat("Damage", Random.value));
 
@@ -271,7 +271,7 @@ public class ItemManagerWindow : EditorWindow{
             else {
                 GUILayout.Box(item.icon.texture, GUILayout.Width(16), GUILayout.Height(16));
             }
-            GUILayout.Label(item.name);
+            GUILayout.Label(item.itemName);
             EditorGUILayout.EndHorizontal();
             Rect boxRect = GUILayoutUtility.GetLastRect();
             
@@ -311,9 +311,14 @@ public class ItemManagerWindow : EditorWindow{
             EditorGUILayout.EndHorizontal();
             
             EditorGUILayout.BeginHorizontal(statLine);
+            GUILayout.Label("Item ID", leftCol);
+            GUILayout.Label(selectedItem.id, rightCol);
+            EditorGUILayout.EndHorizontal();
+            
+            EditorGUILayout.BeginHorizontal(statLine);
             GUILayout.Label("Name", leftCol);
             if (editing) itemName = GUILayout.TextField(itemName);
-            else GUILayout.Label(selectedItem.name, rightCol);
+            else GUILayout.Label(selectedItem.itemName, rightCol);
             EditorGUILayout.EndHorizontal();
             
             EditorGUILayout.BeginHorizontal(statLine);
@@ -397,7 +402,7 @@ public class ItemManagerWindow : EditorWindow{
             
             if (GUILayout.Button(editing ? "Save" : "Edit", GUILayout.Width(360))) {
                 if (editing) { // clicked on Save
-                    selectedItem.name = itemName;
+                    selectedItem.itemName = itemName;
                     selectedItem.category = itemCatIndex < 1 ? null : catDatabase[itemCatIndex-1];
                     selectedItem.description = itemDescription;
                     selectedItem.maxStack = itemMaxStack;
@@ -417,7 +422,7 @@ public class ItemManagerWindow : EditorWindow{
 
                     GenerateCatDatabase();
                     
-                    itemName = selectedItem.name;
+                    itemName = selectedItem.itemName;
                     itemCatIndex = catDatabase.IndexOf(selectedItem.category)+1;
                     itemDescription = selectedItem.description;
                     itemMaxStack = selectedItem.maxStack;
