@@ -15,8 +15,8 @@ tooltip
 Unique or randomly generated names
 Shop/crafting
 Sound design
-Multiple example themes
 Language Localisation
+Multiple example themes - heat sig, rogue like cards, mc inv, mmo inv.
 
 
 competition!

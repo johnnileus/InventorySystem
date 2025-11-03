@@ -5,6 +5,7 @@ using UnityEngine;
 
 
 // used for storing temporary copies of an item's custom attributes to modify.
+#region UIAttribute
 [Serializable]
 public abstract class UIAttributeBase{
     public string name;
@@ -103,3 +104,4 @@ public class UIAttributeBool : UIAttributeBase{
         value = v;
     }
 }
+#endregion
