@@ -30,6 +30,11 @@ public class StatAttributeInt : StatAttributeBase{
         name = n;
         value = v;
     }
+
+    public StatAttributeInt(StatAttributeInt other){
+        value = other.value;
+        name = other.name;
+    }
 }
 
 [Serializable]
@@ -45,6 +50,11 @@ public class StatAttributeFloat : StatAttributeBase{
     public StatAttributeFloat(string n, float v){
         name = n;
         value = v;
+    }
+
+    public StatAttributeFloat(StatAttributeFloat other){
+        value = other.value;
+        name = other.name;
     }
 }
 
@@ -62,6 +72,10 @@ public class StatAttributeString : StatAttributeBase{
         name = n;
         value = v;
     }
+    public StatAttributeString(StatAttributeString other){
+        value = other.value;
+        name = other.name;
+    }
 }
 
 [Serializable]
@@ -78,23 +92,8 @@ public class StatAttributeBool : StatAttributeBase{
         name = n;
         value = v;
     }
+    public StatAttributeBool(StatAttributeBool other){
+        value = other.value;
+        name = other.name;
+    }
 }
-
-// [Serializable]
-// public class ItemAttribute<T> : ItemAttributeBase{
-//
-//     public T value;
-//     public override object GetValue(){
-//         return value;
-//
-//     }
-//     
-//     public string GetValueAsString(){
-//         return GetValue().ToString();
-//     }
-//     
-//     public ItemAttribute(string n, T v){
-//         name = n;
-//         value = v;
-//     }
-// }

@@ -31,4 +31,5 @@ public class ItemSO : ScriptableObject{
     public void CloneUIAttribute(UIAttributeBase attr){
         attributes.Add(attr.GenerateItemAttribute());
     }
+
 }
