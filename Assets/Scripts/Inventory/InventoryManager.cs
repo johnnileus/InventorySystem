@@ -4,16 +4,13 @@ using UnityEngine;
 
 public class InventoryManager : MonoBehaviour{
     [SerializeField] private ItemSO test;
+
+    private InventoryContainer container;
     // Start is called before the first frame update
     void Start(){
-        InventoryItem newItem = new InventoryItem(test);
-        foreach (var att in newItem.attributes) {
-            Debug.Log(att.name + att.GetValue());
-        }
-        print("a");
-        foreach (var att in newItem.baseItem.attributes) {
-            Debug.Log(att.name + att.GetValue());
-        }
+        container = new InventoryContainer(6);
+        InventoryItem item = new InventoryItem(test);
+        container.InsertItem(item);
     }
 
     // Update is called once per frame

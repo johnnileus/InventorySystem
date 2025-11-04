@@ -7,6 +7,7 @@ using UnityEngine;
 public class InventoryItem{
     
     public ItemSO baseItem;
+    public int count;
     public List<StatAttributeBase> attributes;
 
 

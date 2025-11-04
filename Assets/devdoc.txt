@@ -22,3 +22,7 @@ Multiple example themes - heat sig, rogue like cards, mc inv, mmo inv.
 competition!
 https://assetstore.unity.com/packages/tools/game-toolkits/ultimate-inventory-system-166053#description
 
+
+
+-- bugs
+- fix ID assigning to new items

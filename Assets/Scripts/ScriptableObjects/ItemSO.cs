@@ -10,7 +10,7 @@ public class ItemSO : ScriptableObject{
     public string itemName;
     public CategorySO category;
     public string description;
-    public int maxStack;
+    public int maxStack = 1;
 
     public Sprite icon;
     public GameObject worldPrefab;
